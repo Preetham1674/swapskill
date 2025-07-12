@@ -76,17 +76,27 @@ router.post("/login", async (req, res) => {
     // 1. Check if user exists by email
     let user = await User.findOne({ email });
     if (!user) {
-      // Using a generic message for security purposes
       return res.status(400).json({ msg: "Invalid credentials" });
     }
 
-    // 2. Compare entered password with hashed password
+    // NEW: 2. Check if the user is banned
+    if (user.isBanned) {
+      // Return a 403 Forbidden or 401 Unauthorized for security,
+      // and a message indicating the account is inactive.
+      return res
+        .status(403)
+        .json({ msg: "Your account has been suspended or banned." });
+      // Alternatively, a more generic 400 for security:
+      // return res.status(400).json({ msg: 'Invalid credentials' });
+    }
+
+    // 3. Compare entered password with hashed password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ msg: "Invalid credentials" });
     }
 
-    // 3. Generate JWT token
+    // 4. Generate JWT token (now that all checks passed)
     const payload = {
       user: {
         id: user.id,
@@ -97,7 +107,7 @@ router.post("/login", async (req, res) => {
     jwt.sign(
       payload,
       process.env.JWT_SECRET,
-      { expiresIn: "1h" }, // Token expires in 1 hour
+      { expiresIn: "1h" },
       (err, token) => {
         if (err) {
           console.error("JWT Sign Error:", err.message);

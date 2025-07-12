@@ -9,6 +9,7 @@ const cors = require("cors");
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes"); // <--- ADD THIS LINE
 const swapRoutes = require("./routes/swapRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -37,6 +38,7 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes); // <--- ADD THIS LINE (mounts userRoutes under /api/users)
 app.use("/api/swaps", swapRoutes);
+app.use("/api/admin", adminRoutes);
 
 // --- Start the server ---
 app.listen(PORT, () => {

@@ -1,15 +1,20 @@
 // src/components/Navbar.jsx
 import React from "react";
-import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext"; // <--- IMPORT useAuth
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const Navbar = () => {
-  const { isAuthenticated, logout, user } = useAuth(); // <--- USE AUTH HOOK
+  const { user, isAuthenticated, logout } = useAuth(); // <--- Get 'user' from context
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
 
   return (
     <nav className="bg-blue-700 p-4 shadow-md">
       <div className="container mx-auto flex justify-between items-center">
-        {/* Logo/Brand */}
         <Link
           to="/"
           className="text-white text-2xl font-bold hover:text-blue-200 transition duration-300"
@@ -17,7 +22,6 @@ const Navbar = () => {
           Skill Swap
         </Link>
 
-        {/* Navigation Links */}
         <div className="space-x-6">
           <Link
             to="/"
@@ -32,20 +36,32 @@ const Navbar = () => {
             Browse Skills
           </Link>
 
-          {/* Conditional Links */}
           {isAuthenticated ? (
             <>
-              {" "}
-              {/* Fragment to group multiple elements */}
               <Link
                 to="/dashboard"
                 className="text-white hover:text-blue-200 transition duration-300"
               >
                 Dashboard
               </Link>
-              {/* We can add a link to user's own profile page here later */}
+              <Link
+                to="/swaps"
+                className="text-white hover:text-blue-200 transition duration-300"
+              >
+                My Swaps
+              </Link>
+              {/* NEW ADMIN LINK BELOW */}
+              {user &&
+                user.isAdmin && ( // Only show if user is authenticated AND isAdmin is true
+                  <Link
+                    to="/admin/dashboard"
+                    className="text-yellow-300 hover:text-yellow-100 font-bold transition duration-300"
+                  >
+                    Admin
+                  </Link>
+                )}
               <button
-                onClick={logout} // Call logout function on click
+                onClick={handleLogout}
                 className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-md transition duration-300 ease-in-out"
               >
                 Logout

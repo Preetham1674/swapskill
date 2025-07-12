@@ -1,7 +1,7 @@
 // src/App.jsx
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-
+import AdminDashboardPage from "./pages/AdminDashboardPage";
 // Import Components
 import Navbar from "./components/Navbar";
 
@@ -18,7 +18,9 @@ import ProfilePage from "./pages/ProfilePage"; // <--- NEW IMPORT
 // src/App.jsx
 // ... other imports
 import UserDetailPage from "./pages/UserDetailPage"; // <--- NEW IMPORT
-
+// src/App.jsx
+// ... other imports
+import SwapRequestsPage from "./pages/SwapRequestsPage"; // <--- NEW IMPORT
 function App() {
   return (
     <Router>
@@ -29,12 +31,17 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/register" element="/register" />
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/browse" element={<BrowseUsersPage />} />
             <Route path="/profile" element={<ProfilePage />} />
-            <Route path="/users/:id" element={<UserDetailPage />} />{" "}
-            {/* <--- NEW DYNAMIC ROUTE */}
+            <Route path="/users/:id" element={<UserDetailPage />} />
+            <Route path="/swaps" element={<SwapRequestsPage />} />
+            <Route
+              path="/admin/dashboard"
+              element={<AdminDashboardPage />}
+            />{" "}
+            {/* <--- NEW ROUTE */}
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </main>
